@@ -1,0 +1,63 @@
+{
+  "name": "鼠标与键盘操作 (Mouse & Keyboard)",
+  "description": "提供平滑拟人化鼠标移动、点击、拖拽滑动、滚轮滚动、键盘输入打字、快捷键触发与按键监听功能",
+  "group": "鼠标键盘",
+  "actions": {
+    "CellsClick": {
+      "display_name": "单元格点击 (CellsClick)",
+      "description": "在指定的网格或单元格坐标区域自动执行鼠标点击"
+    },
+    "Click": {
+      "display_name": "鼠标点击 (Click)",
+      "description": "在当前鼠标所在位置或屏幕指定坐标上单击或双击鼠标"
+    },
+    "DragPointer": {
+      "display_name": "鼠标拖拽 (DragPointer)",
+      "description": "按住鼠标从当前位置平滑拖拽移动到目标位置，常用于滑块滑动或拖动文件"
+    },
+    "ListenMouse": {
+      "display_name": "监听鼠标事件 (ListenMouse)",
+      "description": "在后台监听鼠标的点击或移动事件，并在触发时执行相应操作"
+    },
+    "MoveOffset": {
+      "display_name": "鼠标相对偏移移动 (MoveOffset)",
+      "description": "让鼠标光标相对于当前位置向上、下、左、右移动指定距离"
+    },
+    "MovePointer": {
+      "display_name": "鼠标绝对定位移动 (MovePointer)",
+      "description": "将鼠标光标移动到屏幕上的指定像素位置"
+    },
+    "WheelMouse": {
+      "display_name": "滚动鼠标滚轮 (WheelMouse)",
+      "description": "模拟鼠标滚轮向上或向下滚动指定步数，常用于网页或文档翻页"
+    },
+    "ListenKeyboard": {
+      "display_name": "监听键盘事件 (ListenKeyboard)",
+      "description": "在后台监听键盘按键，或设置全局快捷键触发流程"
+    },
+    "PressAndReleaseKey": {
+      "display_name": "敲击按键 (PressAndReleaseKey)",
+      "description": "按下某个按键并在保持指定时间后松开"
+    },
+    "PressKey": {
+      "display_name": "按下按键 (PressKey)",
+      "description": "按下指定按键并持续保持按住状态（不自动松开）"
+    },
+    "ReleaseKey": {
+      "display_name": "释放按键 (ReleaseKey)",
+      "description": "松开之前处于按住状态的键盘按键"
+    },
+    "SendKey": {
+      "display_name": "发送组合快捷键 (SendKey)",
+      "description": "向当前活动窗口发送一组快捷键组合（如 Ctrl+C、Enter 等）"
+    },
+    "SendText": {
+      "display_name": "模拟文本输入 (SendText)",
+      "description": "向当前的输入框模拟敲击键盘输入一段文本内容"
+    },
+    "WaitKey": {
+      "display_name": "等待按键触发 (WaitKey)",
+      "description": "暂停流程，直到用户按下了键盘上的某个指定按键后再继续"
+    }
+  }
+}

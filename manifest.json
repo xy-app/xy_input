@@ -1,0 +1,611 @@
+{
+  "plugin_id": "xy_input",
+  "name": "鼠标与键盘操作 (Mouse & Keyboard)",
+  "version": "0.51.0",
+  "group": "Input",
+  "group_icon": "⌨",
+  "description": "提供平滑拟人化鼠标移动、点击、拖拽滑动、滚轮滚动、键盘输入打字、快捷键触发与按键监听功能",
+  "actions": [
+    {
+      "tag": "CellsClick",
+      "display_name": "单元格点击 (CellsClick)",
+      "icon": "🖲️",
+      "platforms": "All",
+      "description": "在指定的网格或单元格坐标区域自动执行鼠标点击",
+      "keywords": [
+        "mouse",
+        "click",
+        "cells",
+        "单元格点击"
+      ],
+      "fields": [
+        {
+          "name": "target",
+          "display_name": "目标网格区域",
+          "intrinsic_type": "Rect",
+          "default_type": "Rect",
+          "default_value": "0, 0, 0, 0",
+          "presets": [
+            "0, 0, 1920, 1080",
+            "100, 100, 800, 600"
+          ],
+          "description": "目标屏幕网格矩形区域 (x, y, width, height)"
+        },
+        {
+          "name": "grid",
+          "display_name": "网格行列数",
+          "intrinsic_type": "Size",
+          "default_type": "Size",
+          "default_value": "3, 3",
+          "presets": [
+            "3, 3",
+            "4, 6",
+            "12, 12"
+          ],
+          "description": "划分网格的列数与行数 (如 3, 3)"
+        },
+        {
+          "name": "delay",
+          "display_name": "点击间隔延时 (秒)",
+          "intrinsic_type": "Real",
+          "default_type": "Real",
+          "default_value": "0.05",
+          "presets": [
+            "0.05",
+            "0.1",
+            "0.2"
+          ],
+          "description": "依次点击每个单元格之间的间隔延迟时间 (秒)"
+        },
+        {
+          "name": "button",
+          "display_name": "鼠标按键",
+          "intrinsic_type": "MouseButton",
+          "default_type": "MouseButton",
+          "default_value": "Left",
+          "presets": [
+            "Left",
+            "Right",
+            "Middle",
+            "DoubleClick",
+            "None"
+          ],
+          "description": "触发点击的鼠标键位"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "Click",
+      "display_name": "鼠标点击 (Click)",
+      "icon": "🖱️",
+      "platforms": "All",
+      "description": "在当前鼠标所在位置或屏幕指定坐标上单击或双击鼠标",
+      "keywords": [
+        "mouse",
+        "click",
+        "left",
+        "right",
+        "鼠标点击"
+      ],
+      "fields": [
+        {
+          "name": "button",
+          "display_name": "鼠标按键",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "left",
+          "presets": [
+            "left",
+            "right",
+            "middle"
+          ],
+          "description": "触发的鼠标键位"
+        },
+        {
+          "name": "times",
+          "display_name": "点击次数",
+          "intrinsic_type": "number",
+          "default_type": "number",
+          "default_value": "1",
+          "presets": [
+            "1",
+            "2"
+          ],
+          "description": "连续点击次数"
+        },
+        {
+          "name": "interval",
+          "display_name": "点击间隔 (毫秒)",
+          "intrinsic_type": "number",
+          "default_type": "number",
+          "default_value": "50",
+          "presets": [
+            "50",
+            "100"
+          ],
+          "description": "连续点击间隔"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "DragPointer",
+      "display_name": "鼠标拖拽 (DragPointer)",
+      "icon": "🖐️",
+      "platforms": "All",
+      "description": "按住鼠标从当前位置平滑拖拽移动到目标位置，常用于滑块滑动或拖动文件",
+      "keywords": [
+        "mouse",
+        "drag",
+        "pointer",
+        "鼠标拖拽"
+      ],
+      "fields": [
+        {
+          "name": "button",
+          "display_name": "拖拽按键",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "left",
+          "presets": [
+            "left",
+            "right"
+          ],
+          "description": "拖拽过程中按住的鼠标键"
+        },
+        {
+          "name": "offset",
+          "display_name": "偏移坐标 (X, Y)",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "100,0",
+          "presets": [
+            "100,0",
+            "0,100",
+            "100,100"
+          ],
+          "description": "相对当前光标位置的偏移量"
+        },
+        {
+          "name": "duration",
+          "display_name": "拖拽持续时间 (毫秒)",
+          "intrinsic_type": "number",
+          "default_type": "number",
+          "default_value": "200",
+          "presets": [
+            "100",
+            "200",
+            "500"
+          ],
+          "description": "平滑移动耗时"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "ListenMouse",
+      "display_name": "监听鼠标事件 (ListenMouse)",
+      "icon": "👂",
+      "platforms": "All",
+      "description": "在后台监听鼠标的点击或移动事件，并在触发时执行相应操作",
+      "keywords": [
+        "mouse",
+        "listen",
+        "hook",
+        "鼠标监听"
+      ],
+      "fields": [
+        {
+          "name": "button",
+          "display_name": "监听键位",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "left",
+          "presets": [
+            "left",
+            "right",
+            "middle",
+            "x1",
+            "x2"
+          ],
+          "description": "待捕获的鼠标按键"
+        },
+        {
+          "name": "event_type",
+          "display_name": "事件类型",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "down",
+          "presets": [
+            "down",
+            "up",
+            "click",
+            "double_click"
+          ],
+          "description": "鼠标事件类型"
+        },
+        {
+          "name": "block_event",
+          "display_name": "拦截事件传递",
+          "intrinsic_type": "bool",
+          "default_type": "bool",
+          "default_value": "false",
+          "presets": [
+            "true",
+            "false"
+          ],
+          "description": "是否阻止事件传递给下层窗口"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "MoveOffset",
+      "display_name": "鼠标相对偏移移动 (MoveOffset)",
+      "icon": "↔️",
+      "platforms": "All",
+      "description": "让鼠标光标相对于当前位置向上、下、左、右移动指定距离",
+      "keywords": [
+        "mouse",
+        "move",
+        "offset",
+        "相对移动"
+      ],
+      "fields": [
+        {
+          "name": "offset",
+          "display_name": "偏移量 (X, Y)",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "10,0",
+          "presets": [
+            "10,0",
+            "0,10",
+            "-10,0",
+            "0,-10"
+          ],
+          "description": "相对当前坐标的偏移像素"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "MovePointer",
+      "display_name": "鼠标绝对定位移动 (MovePointer)",
+      "icon": "↗️",
+      "platforms": "All",
+      "description": "将鼠标光标移动到屏幕上的指定像素位置",
+      "keywords": [
+        "mouse",
+        "move",
+        "pointer",
+        "光标定位"
+      ],
+      "fields": [
+        {
+          "name": "xy",
+          "display_name": "目标屏幕坐标 (X, Y)",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "100,100",
+          "presets": [
+            "0,0",
+            "100,100",
+            "500,500"
+          ],
+          "description": "目标屏幕绝对坐标"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "WheelMouse",
+      "display_name": "滚动鼠标滚轮 (WheelMouse)",
+      "icon": "🛞",
+      "platforms": "All",
+      "description": "模拟鼠标滚轮向上或向下滚动指定步数，常用于网页或文档翻页",
+      "keywords": [
+        "mouse",
+        "wheel",
+        "scroll",
+        "鼠标滚轮"
+      ],
+      "fields": [
+        {
+          "name": "direction",
+          "display_name": "滚动方向",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "down",
+          "presets": [
+            "up",
+            "down"
+          ],
+          "description": "滚轮转动方向"
+        },
+        {
+          "name": "times",
+          "display_name": "滚动格数",
+          "intrinsic_type": "number",
+          "default_type": "number",
+          "default_value": "3",
+          "presets": [
+            "1",
+            "3",
+            "5",
+            "10"
+          ],
+          "description": "滚轮转动的刻度格数"
+        },
+        {
+          "name": "interval",
+          "display_name": "每次间隔 (毫秒)",
+          "intrinsic_type": "number",
+          "default_type": "number",
+          "default_value": "50",
+          "presets": [
+            "20",
+            "50",
+            "100"
+          ],
+          "description": "多次滚动间的间隔时间"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "ListenKeyboard",
+      "display_name": "监听键盘事件 (ListenKeyboard)",
+      "icon": "🎧",
+      "platforms": "All",
+      "description": "在后台监听键盘按键，或设置全局快捷键触发流程",
+      "keywords": [
+        "keyboard",
+        "listen",
+        "hotkey",
+        "键盘监听"
+      ],
+      "fields": [
+        {
+          "name": "input",
+          "display_name": "按键名称/热键",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "F1",
+          "presets": [
+            "F1",
+            "F2",
+            "Ctrl+Shift+A",
+            "Space",
+            "Enter"
+          ],
+          "description": "监听的目标按键或组合热键"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "PressAndReleaseKey",
+      "display_name": "敲击按键 (PressAndReleaseKey)",
+      "icon": "⌨️",
+      "platforms": "All",
+      "description": "按下某个按键并在保持指定时间后松开",
+      "keywords": [
+        "keyboard",
+        "press",
+        "release",
+        "敲击按键"
+      ],
+      "fields": [
+        {
+          "name": "key",
+          "display_name": "按键名称",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "Enter",
+          "presets": [
+            "Enter",
+            "Tab",
+            "Space",
+            "Escape",
+            "Backspace"
+          ],
+          "description": "要模拟敲击的按键"
+        },
+        {
+          "name": "time",
+          "display_name": "保持时长 (毫秒)",
+          "intrinsic_type": "number",
+          "default_type": "number",
+          "default_value": "50",
+          "presets": [
+            "20",
+            "50",
+            "100"
+          ],
+          "description": "按键按住到松开的时间"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "PressKey",
+      "display_name": "按下按键 (PressKey)",
+      "icon": "⬇️",
+      "platforms": "All",
+      "description": "按下指定按键并持续保持按住状态（不自动松开）",
+      "keywords": [
+        "keyboard",
+        "press",
+        "keydown",
+        "按下按键"
+      ],
+      "fields": [
+        {
+          "name": "key",
+          "display_name": "按键名称",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "Shift",
+          "presets": [
+            "Shift",
+            "Control",
+            "Alt",
+            "W",
+            "A",
+            "S",
+            "D"
+          ],
+          "description": "要按住不放的按键"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "ReleaseKey",
+      "display_name": "释放按键 (ReleaseKey)",
+      "icon": "⬆️",
+      "platforms": "All",
+      "description": "松开之前处于按住状态的键盘按键",
+      "keywords": [
+        "keyboard",
+        "release",
+        "keyup",
+        "释放按键"
+      ],
+      "fields": [
+        {
+          "name": "input",
+          "display_name": "按键名称",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "Shift",
+          "presets": [
+            "Shift",
+            "Control",
+            "Alt"
+          ],
+          "description": "要松开的按键"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "SendKey",
+      "display_name": "发送组合快捷键 (SendKey)",
+      "icon": "🔤",
+      "platforms": "All",
+      "description": "向当前活动窗口发送一组快捷键组合（如 Ctrl+C、Enter 等）",
+      "keywords": [
+        "keyboard",
+        "shortcut",
+        "hotkey",
+        "快捷键"
+      ],
+      "fields": [
+        {
+          "name": "shortcut",
+          "display_name": "快捷键组合",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "Ctrl+C",
+          "presets": [
+            "Ctrl+C",
+            "Ctrl+V",
+            "Ctrl+A",
+            "Ctrl+S",
+            "Alt+Tab"
+          ],
+          "description": "标准快捷键字符串"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "SendText",
+      "display_name": "模拟文本输入 (SendText)",
+      "icon": "💬",
+      "platforms": "All",
+      "description": "向当前的输入框模拟敲击键盘输入一段文本内容",
+      "keywords": [
+        "keyboard",
+        "text",
+        "input",
+        "type",
+        "模拟打字"
+      ],
+      "fields": [
+        {
+          "name": "text",
+          "display_name": "输入文本内容",
+          "intrinsic_type": "string",
+          "default_type": "string",
+          "default_value": "",
+          "presets": [],
+          "description": "要输入的文本"
+        },
+        {
+          "name": "enter_key",
+          "display_name": "输入后自动回车",
+          "intrinsic_type": "bool",
+          "default_type": "bool",
+          "default_value": "false",
+          "presets": [
+            "true",
+            "false"
+          ],
+          "description": "输入完成是否附带敲击回车键"
+        }
+      ],
+      "output_type": "bool"
+    },
+    {
+      "tag": "WaitKey",
+      "display_name": "等待按键触发 (WaitKey)",
+      "icon": "⏳",
+      "platforms": "All",
+      "description": "暂停流程，直到用户按下了键盘上的某个指定按键后再继续",
+      "keywords": [
+        "keyboard",
+        "wait",
+        "key",
+        "press",
+        "hotkey",
+        "等待按键"
+      ],
+      "fields": [
+        {
+          "name": "key",
+          "display_name": "目标按键",
+          "intrinsic_type": "KeySequence",
+          "default_type": "KeySequence",
+          "default_value": "Enter",
+          "presets": [
+            "Enter",
+            "Escape",
+            "Space",
+            "F1",
+            "F2"
+          ],
+          "description": "按键名称或组合键"
+        },
+        {
+          "name": "timeout",
+          "display_name": "超时时间 (秒)",
+          "intrinsic_type": "real",
+          "default_type": "real",
+          "default_value": "5.0",
+          "presets": [
+            "1.0",
+            "3.0",
+            "5.0",
+            "0.0"
+          ],
+          "description": "等待超时时间(秒)，0表示无限等待"
+        }
+      ],
+      "output_type": "bool"
+    }
+  ]
+}
