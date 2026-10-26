@@ -1,7 +1,7 @@
 {
   "plugin_id": "xy_input",
   "name": "鼠标与键盘操作 (Mouse & Keyboard)",
-  "version": "0.51.0",
+  "version": "0.53.0",
   "group": "Input",
   "group_icon": "⌨",
   "description": "提供平滑拟人化鼠标移动、点击、拖拽滑动、滚轮滚动、键盘输入打字、快捷键触发与按键监听功能",
@@ -23,6 +23,8 @@
           "name": "target",
           "display_name": "目标网格区域",
           "intrinsic_type": "Rect",
+          "required": true,
+          "group": "区域与网格",
           "default_type": "Rect",
           "default_value": "0, 0, 0, 0",
           "presets": [
@@ -35,6 +37,8 @@
           "name": "grid",
           "display_name": "网格行列数",
           "intrinsic_type": "Size",
+          "required": true,
+          "group": "区域与网格",
           "default_type": "Size",
           "default_value": "3, 3",
           "presets": [
@@ -47,8 +51,9 @@
         {
           "name": "delay",
           "display_name": "点击间隔延时 (秒)",
-          "intrinsic_type": "Real",
-          "default_type": "Real",
+          "intrinsic_type": "real",
+          "group": "点击动作",
+          "default_type": "real",
           "default_value": "0.05",
           "presets": [
             "0.05",
@@ -60,20 +65,41 @@
         {
           "name": "button",
           "display_name": "鼠标按键",
-          "intrinsic_type": "MouseButton",
+          "intrinsic_type": "Enum",
+          "group": "点击动作",
           "default_type": "MouseButton",
           "default_value": "Left",
           "presets": [
             "Left",
             "Right",
-            "Middle",
-            "DoubleClick",
-            "None"
+            "Middle"
           ],
           "description": "触发点击的鼠标键位"
+        },
+        {
+          "name": "driver",
+          "display_name": "驱动选择",
+          "intrinsic_type": "Enum",
+          "group": "输入驱动",
+          "is_advanced": true,
+          "default_type": "driver",
+          "default_value": "Default",
+          "presets": [
+            "Default",
+            "System",
+            "KMBox"
+          ],
+          "description": "输入驱动模式：Default（全局硬件优先，未连降级系统）、System（强制系统底层模拟）、KMBox（强制硬件盒子，未连则报错）"
         }
       ],
-      "output_type": "bool"
+      "output_type": "boolean",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "单元格批量点击是否全部成功执行 (true/false)"
+        }
+      ]
     },
     {
       "tag": "Click",
@@ -92,20 +118,24 @@
         {
           "name": "button",
           "display_name": "鼠标按键",
-          "intrinsic_type": "string",
-          "default_type": "string",
-          "default_value": "left",
+          "intrinsic_type": "Enum",
+          "required": true,
+          "group": "点击配置",
+          "default_type": "MouseButton",
+          "default_value": "Left",
           "presets": [
-            "left",
-            "right",
-            "middle"
+            "Left",
+            "Right",
+            "Middle"
           ],
           "description": "触发的鼠标键位"
         },
         {
           "name": "times",
           "display_name": "点击次数",
-          "intrinsic_type": "number",
+          "intrinsic_type": "Integer",
+          "required": true,
+          "group": "点击配置",
           "default_type": "number",
           "default_value": "1",
           "presets": [
@@ -116,18 +146,214 @@
         },
         {
           "name": "interval",
-          "display_name": "点击间隔 (毫秒)",
-          "intrinsic_type": "number",
-          "default_type": "number",
-          "default_value": "50",
+          "display_name": "点击间隔秒 (interval)",
+          "intrinsic_type": "Real",
+          "group": "点击配置",
+          "default_type": "real",
+          "default_value": "0.05",
           "presets": [
-            "50",
-            "100"
+            "0.05",
+            "0.1",
+            "0.2"
           ],
-          "description": "连续点击间隔"
+          "description": "连续点击间的间隔时间 (秒)"
+        },
+        {
+          "name": "modifiers",
+          "display_name": "辅助修饰键 (modifiers)",
+          "intrinsic_type": "KeySequence",
+          "group": "修饰键",
+          "default_type": "KeySequence",
+          "default_value": "",
+          "presets": [
+            "",
+            "Ctrl",
+            "Shift",
+            "Alt",
+            "Ctrl+Shift"
+          ],
+          "description": "点击过程中同时按住的修饰键 (如 Ctrl, Shift)"
+        },
+        {
+          "name": "driver",
+          "display_name": "驱动选择",
+          "intrinsic_type": "Enum",
+          "group": "输入驱动",
+          "is_advanced": true,
+          "default_type": "driver",
+          "default_value": "Default",
+          "presets": [
+            "Default",
+            "System",
+            "KMBox"
+          ],
+          "description": "输入驱动模式：Default（全局硬件优先，未连降级系统）、System（强制系统底层模拟）、KMBox（强制硬件盒子，未连则报错）"
         }
       ],
-      "output_type": "bool"
+      "output_type": "boolean",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "鼠标点击动作是否成功触发 (true/false)"
+        }
+      ]
+    },
+    {
+      "tag": "ConnectKmbox",
+      "display_name": "连接硬件外设盒子 (ConnectKmbox)",
+      "icon": "🔌",
+      "platforms": "All",
+      "description": "连接 KMBox (B+串口 / Net网络) 或 Makcu (ESP32-S3串口) 硬件级键鼠模拟外设，提供原生物理级按键与鼠标模拟，保障设备兼容性；连接成功后 xy_input 中所有点击、移动、按键动作将自动通过物理硬件发送；支持置空或断开以切回系统模拟。",
+      "keywords": [
+        "KMBox",
+        "kmbox",
+        "Makcu",
+        "makcu",
+        "ESP32",
+        "硬件盒子",
+        "物理外设",
+        "硬件模拟",
+        "B+",
+        "Net"
+      ],
+      "fields": [
+        {
+          "name": "device_type",
+          "display_name": "设备类型",
+          "intrinsic_type": "Enum",
+          "required": true,
+          "group": "设备与端点",
+          "default_type": "string",
+          "default_value": "Serial",
+          "presets": [
+            "Serial",
+            "Net",
+            "Makcu"
+          ],
+          "description": "连接类型：Serial 为 KMBox B/B+ 串口模式，Net 为 KMBox Net 网络模式，Makcu 为 Makcu ESP32-S3 串口模式"
+        },
+        {
+          "name": "port_name",
+          "display_name": "串口名称",
+          "intrinsic_type": "Enum",
+          "group": "设备与端点",
+          "visible_if": {
+            "field": "device_type",
+            "one_of": ["Serial", "Makcu"]
+          },
+          "default_type": "string",
+          "default_value": "COM3",
+          "presets": [
+            "COM3",
+            "COM4",
+            "COM5",
+            "/dev/ttyUSB0"
+          ],
+          "description": "KMBox B/B+ 或 Makcu 串口通信端口"
+        },
+        {
+          "name": "baud_rate",
+          "display_name": "波特率",
+          "intrinsic_type": "Integer",
+          "group": "设备与端点",
+          "visible_if": {
+            "field": "device_type",
+            "one_of": ["Serial", "Makcu"]
+          },
+          "default_type": "number",
+          "default_value": "115200",
+          "presets": [
+            "115200",
+            "4000000",
+            "9600"
+          ],
+          "description": "串口波特率，KMBox 默认 115200，Makcu 支持 115200 与 4000000 (4M)"
+        },
+        {
+          "name": "remote_addr",
+          "display_name": "网络地址",
+          "intrinsic_type": "Enum",
+          "group": "网络模式",
+          "visible_if": {
+            "field": "device_type",
+            "one_of": ["Net"]
+          },
+          "default_type": "string",
+          "default_value": "192.168.2.188:1234",
+          "presets": [
+            "192.168.2.188:1234"
+          ],
+          "description": "KMBox Net 远程 IP 和端口"
+        },
+        {
+          "name": "mac",
+          "display_name": "UUID / MAC",
+          "intrinsic_type": "Enum",
+          "group": "网络模式",
+          "visible_if": {
+            "field": "device_type",
+            "one_of": ["Net"]
+          },
+          "default_type": "string",
+          "default_value": "12345678",
+          "presets": [
+            "12345678"
+          ],
+          "description": "KMBox Net 通信校验 MAC (8位十六进制)"
+        },
+        {
+          "name": "disconnect",
+          "display_name": "断开切回系统",
+          "intrinsic_type": "Boolean",
+          "group": "连接控制",
+          "default_type": "boolean",
+          "default_value": "false",
+          "presets": [
+            "false",
+            "true"
+          ],
+          "description": "false 表示连接/启用硬件盒子，true 表示断开并切回系统软件模拟"
+        },
+        {
+          "name": "auto_reconnect",
+          "display_name": "自动重连 (auto_reconnect)",
+          "intrinsic_type": "Boolean",
+          "group": "高级重连",
+          "is_advanced": true,
+          "default_type": "boolean",
+          "default_value": "true",
+          "presets": [
+            "true",
+            "false"
+          ],
+          "description": "通信断开或丢包时是否自动尝试重连"
+        },
+        {
+          "name": "timeout_ms",
+          "display_name": "超时毫秒数 (timeout_ms)",
+          "intrinsic_type": "Integer",
+          "group": "高级重连",
+          "is_advanced": true,
+          "default_type": "number",
+          "default_value": "1000",
+          "presets": [
+            "500",
+            "1000",
+            "2000",
+            "3000"
+          ],
+          "description": "硬件握手与通信超时耗时 (毫秒)"
+        }
+      ],
+      "output_type": "void",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "硬件外设盒子是否建立连接 (true/false)"
+        }
+      ]
     },
     {
       "tag": "DragPointer",
@@ -143,22 +369,12 @@
       ],
       "fields": [
         {
-          "name": "button",
-          "display_name": "拖拽按键",
-          "intrinsic_type": "string",
-          "default_type": "string",
-          "default_value": "left",
-          "presets": [
-            "left",
-            "right"
-          ],
-          "description": "拖拽过程中按住的鼠标键"
-        },
-        {
           "name": "offset",
           "display_name": "偏移坐标 (X, Y)",
-          "intrinsic_type": "string",
-          "default_type": "string",
+          "intrinsic_type": "Point",
+          "required": true,
+          "group": "拖拽路径",
+          "default_type": "Point",
           "default_value": "100,0",
           "presets": [
             "100,0",
@@ -168,9 +384,23 @@
           "description": "相对当前光标位置的偏移量"
         },
         {
+          "name": "button",
+          "display_name": "拖拽按键",
+          "intrinsic_type": "Enum",
+          "group": "拖拽路径",
+          "default_type": "MouseButton",
+          "default_value": "Left",
+          "presets": [
+            "Left",
+            "Right"
+          ],
+          "description": "拖拽过程中按住的鼠标键"
+        },
+        {
           "name": "duration",
           "display_name": "拖拽持续时间 (毫秒)",
-          "intrinsic_type": "number",
+          "intrinsic_type": "Integer",
+          "group": "拖拽路径",
           "default_type": "number",
           "default_value": "200",
           "presets": [
@@ -179,180 +409,209 @@
             "500"
           ],
           "description": "平滑移动耗时"
+        },
+        {
+          "name": "modifiers",
+          "display_name": "辅助修饰键 (modifiers)",
+          "intrinsic_type": "KeySequence",
+          "group": "修饰键",
+          "default_type": "KeySequence",
+          "default_value": "",
+          "presets": [
+            "",
+            "Ctrl",
+            "Shift",
+            "Alt",
+            "Ctrl+Shift"
+          ],
+          "description": "拖拽过程中同时按住的修饰键 (如 Ctrl, Shift)"
+        },
+        {
+          "name": "driver",
+          "display_name": "驱动选择",
+          "intrinsic_type": "Enum",
+          "group": "输入驱动",
+          "is_advanced": true,
+          "default_type": "driver",
+          "default_value": "Default",
+          "presets": [
+            "Default",
+            "System",
+            "KMBox"
+          ],
+          "description": "输入驱动模式：Default（全局硬件优先，未连降级系统）、System（强制系统底层模拟）、KMBox（强制硬件盒子，未连则报错）"
         }
       ],
-      "output_type": "bool"
+      "output_type": "boolean",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "鼠标拖拽滑动动作是否成功完成 (true/false)"
+        }
+      ]
     },
     {
-      "tag": "ListenMouse",
-      "display_name": "监听鼠标事件 (ListenMouse)",
-      "icon": "👂",
+      "tag": "GetKeyState",
+      "display_name": "获取按键状态 (GetKeyState)",
+      "icon": "🔍",
       "platforms": "All",
-      "description": "在后台监听鼠标的点击或移动事件，并在触发时执行相应操作",
+      "description": "检测 CapsLock / NumLock 开关锁定状态，或检测修饰键与按键是否正被物理按下",
       "keywords": [
-        "mouse",
-        "listen",
-        "hook",
-        "鼠标监听"
+        "keyboard",
+        "key",
+        "state",
+        "capslock",
+        "numlock",
+        "按键状态",
+        "大小写锁定"
       ],
       "fields": [
         {
-          "name": "button",
-          "display_name": "监听键位",
-          "intrinsic_type": "string",
+          "name": "key",
+          "display_name": "检测按键 (key)",
+          "intrinsic_type": "Enum",
+          "required": true,
+          "group": "目标按键",
           "default_type": "string",
-          "default_value": "left",
+          "default_value": "CapsLock",
           "presets": [
-            "left",
-            "right",
-            "middle",
-            "x1",
-            "x2"
+            "CapsLock",
+            "NumLock",
+            "ScrollLock",
+            "Ctrl",
+            "Shift",
+            "Alt",
+            "Win",
+            "Space",
+            "Escape",
+            "Enter"
           ],
-          "description": "待捕获的鼠标按键"
+          "description": "待检测的按键名称"
         },
         {
-          "name": "event_type",
-          "display_name": "事件类型",
-          "intrinsic_type": "string",
+          "name": "check_type",
+          "display_name": "检测类型 (check_type)",
+          "intrinsic_type": "Enum",
+          "required": true,
+          "group": "目标按键",
           "default_type": "string",
-          "default_value": "down",
+          "default_value": "ToggleState",
           "presets": [
-            "down",
-            "up",
-            "click",
-            "double_click"
+            "ToggleState",
+            "Pressed"
           ],
-          "description": "鼠标事件类型"
-        },
-        {
-          "name": "block_event",
-          "display_name": "拦截事件传递",
-          "intrinsic_type": "bool",
-          "default_type": "bool",
-          "default_value": "false",
-          "presets": [
-            "true",
-            "false"
-          ],
-          "description": "是否阻止事件传递给下层窗口"
+          "description": "检测类型：ToggleState (锁定开关状态，用于CapsLock等)；Pressed (物理按压状态，用于Ctrl等)"
         }
       ],
-      "output_type": "bool"
+      "output_type": "boolean",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "按键状态检测结果 (true 为开启/按下，false 为关闭/未按下)"
+        }
+      ]
     },
     {
-      "tag": "MoveOffset",
-      "display_name": "鼠标相对偏移移动 (MoveOffset)",
-      "icon": "↔️",
+      "tag": "HoldKey",
+      "display_name": "按键控制 (HoldKey)",
+      "icon": "🔤",
       "platforms": "All",
-      "description": "让鼠标光标相对于当前位置向上、下、左、右移动指定距离",
+      "description": "按下并保持指定毫秒后释放、单向按下保持不放或松开指定按键",
       "keywords": [
-        "mouse",
-        "move",
-        "offset",
-        "相对移动"
+        "keyboard",
+        "press",
+        "release",
+        "hold",
+        "按键控制",
+        "长按"
       ],
       "fields": [
         {
-          "name": "offset",
-          "display_name": "偏移量 (X, Y)",
-          "intrinsic_type": "string",
-          "default_type": "string",
-          "default_value": "10,0",
+          "name": "key",
+          "display_name": "按键名称 (key)",
+          "intrinsic_type": "Enum",
+          "required": true,
+          "group": "按键动作",
+          "default_type": "KeySequence",
+          "default_value": "Enter",
           "presets": [
-            "10,0",
-            "0,10",
-            "-10,0",
-            "0,-10"
+            "Enter",
+            "Space",
+            "Tab",
+            "Escape",
+            "Backspace",
+            "Ctrl",
+            "Shift",
+            "Alt",
+            "W",
+            "A",
+            "S",
+            "D"
           ],
-          "description": "相对当前坐标的偏移像素"
-        }
-      ],
-      "output_type": "bool"
-    },
-    {
-      "tag": "MovePointer",
-      "display_name": "鼠标绝对定位移动 (MovePointer)",
-      "icon": "↗️",
-      "platforms": "All",
-      "description": "将鼠标光标移动到屏幕上的指定像素位置",
-      "keywords": [
-        "mouse",
-        "move",
-        "pointer",
-        "光标定位"
-      ],
-      "fields": [
-        {
-          "name": "xy",
-          "display_name": "目标屏幕坐标 (X, Y)",
-          "intrinsic_type": "string",
-          "default_type": "string",
-          "default_value": "100,100",
-          "presets": [
-            "0,0",
-            "100,100",
-            "500,500"
-          ],
-          "description": "目标屏幕绝对坐标"
-        }
-      ],
-      "output_type": "bool"
-    },
-    {
-      "tag": "WheelMouse",
-      "display_name": "滚动鼠标滚轮 (WheelMouse)",
-      "icon": "🛞",
-      "platforms": "All",
-      "description": "模拟鼠标滚轮向上或向下滚动指定步数，常用于网页或文档翻页",
-      "keywords": [
-        "mouse",
-        "wheel",
-        "scroll",
-        "鼠标滚轮"
-      ],
-      "fields": [
-        {
-          "name": "direction",
-          "display_name": "滚动方向",
-          "intrinsic_type": "string",
-          "default_type": "string",
-          "default_value": "down",
-          "presets": [
-            "up",
-            "down"
-          ],
-          "description": "滚轮转动方向"
+          "description": "目标按键或组合快捷键"
         },
         {
-          "name": "times",
-          "display_name": "滚动格数",
-          "intrinsic_type": "number",
-          "default_type": "number",
-          "default_value": "3",
+          "name": "mode",
+          "display_name": "操作模式 (mode)",
+          "intrinsic_type": "Enum",
+          "required": true,
+          "group": "按键动作",
+          "default_type": "string",
+          "default_value": "Hold",
           "presets": [
-            "1",
-            "3",
-            "5",
-            "10"
+            "Hold",
+            "Down",
+            "Up"
           ],
-          "description": "滚轮转动的刻度格数"
+          "description": "按键操作模式：Hold（按住并延时后释放）、Down（仅按下保持）、Up（释放按键）"
         },
         {
-          "name": "interval",
-          "display_name": "每次间隔 (毫秒)",
-          "intrinsic_type": "number",
+          "name": "duration_ms",
+          "display_name": "保持时长毫秒 (duration_ms)",
+          "intrinsic_type": "Integer",
+          "group": "时长控制",
+          "visible_if": {
+            "field": "mode",
+            "one_of": ["Hold"]
+          },
           "default_type": "number",
           "default_value": "50",
           "presets": [
             "20",
             "50",
-            "100"
+            "100",
+            "200",
+            "500",
+            "1000"
           ],
-          "description": "多次滚动间的间隔时间"
+          "description": "按住保持时长（毫秒，仅在 mode=Hold 时生效）"
+        },
+        {
+          "name": "driver",
+          "display_name": "驱动模式 (driver)",
+          "intrinsic_type": "Enum",
+          "group": "输入驱动",
+          "is_advanced": true,
+          "default_type": "driver",
+          "default_value": "Default",
+          "presets": [
+            "Default",
+            "System",
+            "KMBox"
+          ],
+          "description": "输入驱动模式"
         }
       ],
-      "output_type": "bool"
+      "output_type": "string",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "按键控制命令是否成功发送 (true/false)"
+        }
+      ]
     },
     {
       "tag": "ListenKeyboard",
@@ -366,11 +625,19 @@
         "hotkey",
         "键盘监听"
       ],
+      "supported_action_modes": [
+        "async_callback",
+        "sync_callback"
+      ],
+      "default_action_mode": "async_callback",
+      "is_event_listener": true,
       "fields": [
         {
           "name": "input",
           "display_name": "按键名称/热键",
-          "intrinsic_type": "string",
+          "intrinsic_type": "String",
+          "required": true,
+          "group": "热键与拦截",
           "default_type": "string",
           "default_value": "F1",
           "presets": [
@@ -378,118 +645,259 @@
             "F2",
             "Ctrl+Shift+A",
             "Space",
-            "Enter"
+            "Enter",
+            "all"
           ],
           "description": "监听的目标按键或组合热键"
-        }
-      ],
-      "output_type": "bool"
-    },
-    {
-      "tag": "PressAndReleaseKey",
-      "display_name": "敲击按键 (PressAndReleaseKey)",
-      "icon": "⌨️",
-      "platforms": "All",
-      "description": "按下某个按键并在保持指定时间后松开",
-      "keywords": [
-        "keyboard",
-        "press",
-        "release",
-        "敲击按键"
-      ],
-      "fields": [
-        {
-          "name": "key",
-          "display_name": "按键名称",
-          "intrinsic_type": "string",
-          "default_type": "string",
-          "default_value": "Enter",
-          "presets": [
-            "Enter",
-            "Tab",
-            "Space",
-            "Escape",
-            "Backspace"
-          ],
-          "description": "要模拟敲击的按键"
         },
         {
-          "name": "time",
-          "display_name": "保持时长 (毫秒)",
-          "intrinsic_type": "number",
-          "default_type": "number",
-          "default_value": "50",
+          "name": "block_event",
+          "display_name": "拦截事件传递",
+          "intrinsic_type": "String",
+          "group": "热键与拦截",
+          "default_type": "string",
+          "default_value": "none",
           "presets": [
-            "20",
-            "50",
-            "100"
+            "none",
+            "current",
+            "all"
           ],
-          "description": "按键按住到松开的时间"
+          "description": "按键事件拦截模式：none（不拦截）、current（仅拦截当前监听的按键）、all（拦截所有按键，紧急停止键除外）"
         }
       ],
-      "output_type": "bool"
+      "output_type": "boolean",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "键盘事件监听器是否注册建立 (true/false)"
+        }
+      ]
     },
     {
-      "tag": "PressKey",
-      "display_name": "按下按键 (PressKey)",
-      "icon": "⬇️",
+      "tag": "ListenMouse",
+      "display_name": "监听鼠标事件 (ListenMouse)",
+      "icon": "👂",
       "platforms": "All",
-      "description": "按下指定按键并持续保持按住状态（不自动松开）",
+      "description": "在后台监听鼠标的点击或移动事件，并在触发时执行相应操作",
       "keywords": [
-        "keyboard",
-        "press",
-        "keydown",
-        "按下按键"
+        "mouse",
+        "listen",
+        "hook",
+        "鼠标监听"
+      ],
+      "supported_action_modes": [
+        "async_callback",
+        "sync_callback"
+      ],
+      "default_action_mode": "async_callback",
+      "is_event_listener": true,
+      "fields": [
+        {
+          "name": "button",
+          "display_name": "监听键位",
+          "intrinsic_type": "Enum",
+          "required": true,
+          "group": "事件与按键",
+          "default_type": "string",
+          "default_value": "left",
+          "presets": [
+            "left",
+            "right",
+            "middle",
+            "x1",
+            "x2",
+            "any"
+          ],
+          "description": "待捕获的鼠标按键"
+        },
+        {
+          "name": "event_type",
+          "display_name": "事件类型",
+          "intrinsic_type": "Enum",
+          "required": true,
+          "group": "事件与按键",
+          "default_type": "string",
+          "default_value": "down",
+          "presets": [
+            "down",
+            "up",
+            "click",
+            "double_click",
+            "any"
+          ],
+          "description": "鼠标事件类型"
+        },
+        {
+          "name": "block_event",
+          "display_name": "拦截事件传递",
+          "intrinsic_type": "String",
+          "group": "事件与按键",
+          "default_type": "string",
+          "default_value": "none",
+          "presets": [
+            "none",
+            "current",
+            "all"
+          ],
+          "description": "鼠标事件拦截模式：none（不拦截）、current（仅拦截当前监听的按键/事件）、all（拦截所有鼠标事件，受保护的应用窗口除外）"
+        }
+      ],
+      "output_type": "boolean",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "鼠标事件监听器是否注册建立 (true/false)"
+        }
+      ]
+    },
+    {
+      "tag": "MovePointer",
+      "display_name": "移动鼠标 (MovePointer)",
+      "icon": "↗️",
+      "platforms": "All",
+      "description": "将鼠标光标移动到屏幕上的指定像素位置或按相对偏移量移动",
+      "keywords": [
+        "mouse",
+        "move",
+        "pointer",
+        "光标定位"
       ],
       "fields": [
         {
-          "name": "key",
-          "display_name": "按键名称",
-          "intrinsic_type": "string",
-          "default_type": "string",
-          "default_value": "Shift",
+          "name": "xy",
+          "display_name": "目标坐标/偏移量 (xy)",
+          "intrinsic_type": "Point",
+          "required": true,
+          "group": "坐标与位移",
+          "default_type": "Point",
+          "default_value": "100,100",
           "presets": [
-            "Shift",
-            "Control",
-            "Alt",
-            "W",
-            "A",
-            "S",
-            "D"
+            "100,100",
+            "500,500",
+            "10,0",
+            "0,10",
+            "-10,0",
+            "0,-10"
           ],
-          "description": "要按住不放的按键"
+          "description": "目标绝对屏幕坐标或相对位移量 (X, Y)"
+        },
+        {
+          "name": "mode",
+          "display_name": "移动模式 (mode)",
+          "intrinsic_type": "Enum",
+          "required": true,
+          "group": "坐标与位移",
+          "default_type": "string",
+          "default_value": "Absolute",
+          "presets": [
+            "Absolute",
+            "Relative"
+          ],
+          "description": "坐标基准模式：Absolute (绝对像素坐标)；Relative (相对当前光标位置偏移)"
+        },
+        {
+          "name": "driver",
+          "display_name": "驱动选择",
+          "intrinsic_type": "Enum",
+          "group": "输入驱动",
+          "is_advanced": true,
+          "default_type": "driver",
+          "default_value": "Default",
+          "presets": [
+            "Default",
+            "System",
+            "KMBox"
+          ],
+          "description": "输入驱动模式：Default（全局硬件优先，未连降级系统）、System（强制系统底层模拟）、KMBox（强制硬件盒子）"
         }
       ],
-      "output_type": "bool"
+      "output_type": "boolean",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "光标平滑/瞬移移动是否成功 (true/false)"
+        }
+      ]
     },
     {
-      "tag": "ReleaseKey",
-      "display_name": "释放按键 (ReleaseKey)",
-      "icon": "⬆️",
+      "tag": "PointerPosition",
+      "display_name": "光标坐标 (PointerPosition)",
+      "icon": "📍",
       "platforms": "All",
-      "description": "松开之前处于按住状态的键盘按键",
+      "description": "获取当前鼠标光标物理坐标位置，或将光标瞬移至指定坐标",
       "keywords": [
-        "keyboard",
-        "release",
-        "keyup",
-        "释放按键"
+        "mouse",
+        "cursor",
+        "position",
+        "pointer",
+        "光标坐标",
+        "鼠标位置"
       ],
       "fields": [
         {
-          "name": "input",
-          "display_name": "按键名称",
-          "intrinsic_type": "string",
+          "name": "action",
+          "display_name": "操作模式 (action)",
+          "intrinsic_type": "Enum",
+          "required": true,
+          "group": "坐标与模式",
           "default_type": "string",
-          "default_value": "Shift",
+          "default_value": "Get",
           "presets": [
-            "Shift",
-            "Control",
-            "Alt"
+            "Get",
+            "Set"
           ],
-          "description": "要松开的按键"
+          "description": "操作模式：Get 获取当前坐标；Set 瞬移到指定坐标"
+        },
+        {
+          "name": "xy",
+          "display_name": "目标坐标 (xy)",
+          "intrinsic_type": "Point",
+          "group": "坐标与模式",
+          "visible_if": {
+            "field": "action",
+            "one_of": ["Set"]
+          },
+          "default_type": "Point",
+          "default_value": "0,0",
+          "presets": [
+            "0,0",
+            "100,100",
+            "500,500"
+          ],
+          "description": "目标瞬移坐标 (仅在 action=Set 时生效)"
+        },
+        {
+          "name": "driver",
+          "display_name": "驱动模式 (driver)",
+          "intrinsic_type": "Enum",
+          "group": "输入驱动",
+          "is_advanced": true,
+          "default_type": "driver",
+          "default_value": "Default",
+          "presets": [
+            "Default",
+            "System",
+            "KMBox"
+          ],
+          "description": "输入驱动模式"
         }
       ],
-      "output_type": "bool"
+      "output_type": "Point",
+      "output_variables": [
+        {
+          "name": "last_input_point",
+          "type": "Point",
+          "description": "光标当前物理绝对坐标 (x, y)"
+        },
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "光标坐标操作是否成功 (true/false)"
+        }
+      ]
     },
     {
       "tag": "SendKey",
@@ -507,7 +915,9 @@
         {
           "name": "shortcut",
           "display_name": "快捷键组合",
-          "intrinsic_type": "string",
+          "intrinsic_type": "Enum",
+          "required": true,
+          "group": "快捷键组合",
           "default_type": "string",
           "default_value": "Ctrl+C",
           "presets": [
@@ -518,16 +928,38 @@
             "Alt+Tab"
           ],
           "description": "标准快捷键字符串"
+        },
+        {
+          "name": "driver",
+          "display_name": "驱动选择",
+          "intrinsic_type": "Enum",
+          "group": "输入驱动",
+          "is_advanced": true,
+          "default_type": "driver",
+          "default_value": "Default",
+          "presets": [
+            "Default",
+            "System",
+            "KMBox"
+          ],
+          "description": "输入驱动模式：Default（全局硬件优先，未连降级系统）、System（强制系统底层模拟）、KMBox（强制硬件盒子，未连则报错）"
         }
       ],
-      "output_type": "bool"
+      "output_type": "boolean",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "快捷键组合是否成功触发 (true/false)"
+        }
+      ]
     },
     {
       "tag": "SendText",
       "display_name": "模拟文本输入 (SendText)",
       "icon": "💬",
       "platforms": "All",
-      "description": "向当前的输入框模拟敲击键盘输入一段文本内容",
+      "description": "向当前的输入框模拟敲击键盘或通过剪贴板输入一段文本内容",
       "keywords": [
         "keyboard",
         "text",
@@ -539,26 +971,78 @@
         {
           "name": "text",
           "display_name": "输入文本内容",
-          "intrinsic_type": "string",
+          "intrinsic_type": "String",
+          "required": true,
+          "group": "输入内容",
           "default_type": "string",
           "default_value": "",
           "presets": [],
           "description": "要输入的文本"
         },
         {
+          "name": "input_mode",
+          "display_name": "输入模式 (input_mode)",
+          "intrinsic_type": "Enum",
+          "group": "输入控制",
+          "default_type": "string",
+          "default_value": "Hardware",
+          "presets": [
+            "Hardware",
+            "Clipboard",
+            "Simulate"
+          ],
+          "description": "文本输入模式：Hardware (模拟物理敲击键盘)；Clipboard (剪贴板复制粘贴，推荐大段文本与中文)；Simulate (驱动注入)"
+        },
+        {
+          "name": "clear_before_input",
+          "display_name": "输入前自动清空 (clear_before_input)",
+          "intrinsic_type": "Boolean",
+          "group": "输入控制",
+          "default_type": "boolean",
+          "default_value": "false",
+          "presets": [
+            "true",
+            "false"
+          ],
+          "description": "输入前是否自动全选并清空输入框已有内容 (Ctrl+A -> Backspace)"
+        },
+        {
           "name": "enter_key",
           "display_name": "输入后自动回车",
-          "intrinsic_type": "bool",
-          "default_type": "bool",
+          "intrinsic_type": "Boolean",
+          "group": "输入控制",
+          "default_type": "boolean",
           "default_value": "false",
           "presets": [
             "true",
             "false"
           ],
           "description": "输入完成是否附带敲击回车键"
+        },
+        {
+          "name": "driver",
+          "display_name": "驱动选择",
+          "intrinsic_type": "Enum",
+          "group": "输入驱动",
+          "is_advanced": true,
+          "default_type": "driver",
+          "default_value": "Default",
+          "presets": [
+            "Default",
+            "System",
+            "KMBox"
+          ],
+          "description": "输入驱动模式：Default（全局硬件优先，未连降级系统）、System（强制系统底层模拟）、KMBox（强制硬件盒子，未连则报错）"
         }
       ],
-      "output_type": "bool"
+      "output_type": "boolean",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "文本模拟输入动作是否成功完成 (true/false)"
+        }
+      ]
     },
     {
       "tag": "WaitKey",
@@ -578,7 +1062,9 @@
         {
           "name": "key",
           "display_name": "目标按键",
-          "intrinsic_type": "KeySequence",
+          "intrinsic_type": "Enum",
+          "required": true,
+          "group": "等待目标",
           "default_type": "KeySequence",
           "default_value": "Enter",
           "presets": [
@@ -594,6 +1080,8 @@
           "name": "timeout",
           "display_name": "超时时间 (秒)",
           "intrinsic_type": "real",
+          "required": true,
+          "group": "等待目标",
           "default_type": "real",
           "default_value": "5.0",
           "presets": [
@@ -605,7 +1093,96 @@
           "description": "等待超时时间(秒)，0表示无限等待"
         }
       ],
-      "output_type": "bool"
+      "output_type": "boolean",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "等待目标按键按下是否成功响应（未超时）(true/false)"
+        }
+      ]
+    },
+    {
+      "tag": "WheelMouse",
+      "display_name": "滚动鼠标滚轮 (WheelMouse)",
+      "icon": "🛞",
+      "platforms": "All",
+      "description": "模拟鼠标滚轮向上或向下滚动指定步数，常用于网页或文档翻页",
+      "keywords": [
+        "mouse",
+        "wheel",
+        "scroll",
+        "鼠标滚轮"
+      ],
+      "fields": [
+        {
+          "name": "direction",
+          "display_name": "滚动方向",
+          "intrinsic_type": "String",
+          "required": true,
+          "group": "滚轮控制",
+          "default_type": "string",
+          "default_value": "down",
+          "presets": [
+            "up",
+            "down"
+          ],
+          "description": "滚轮转动方向"
+        },
+        {
+          "name": "times",
+          "display_name": "滚动格数",
+          "intrinsic_type": "Integer",
+          "required": true,
+          "group": "滚轮控制",
+          "default_type": "number",
+          "default_value": "3",
+          "presets": [
+            "1",
+            "3",
+            "5",
+            "10"
+          ],
+          "description": "滚轮转动的刻度格数"
+        },
+        {
+          "name": "interval",
+          "display_name": "每次间隔 (毫秒)",
+          "intrinsic_type": "Real",
+          "group": "滚轮控制",
+          "default_type": "number",
+          "default_value": "50",
+          "presets": [
+            "20",
+            "50",
+            "100"
+          ],
+          "description": "多次滚动间的间隔时间"
+        },
+        {
+          "name": "driver",
+          "display_name": "驱动选择",
+          "intrinsic_type": "Enum",
+          "group": "输入驱动",
+          "is_advanced": true,
+          "default_type": "driver",
+          "default_value": "Default",
+          "presets": [
+            "Default",
+            "System",
+            "KMBox"
+          ],
+          "description": "输入驱动模式：Default（全局硬件优先，未连降级系统）、System（强制系统底层模拟）、KMBox（强制硬件盒子，未连则报错）"
+        }
+      ],
+      "output_type": "boolean",
+      "output_variables": [
+        {
+          "name": "last_input_status",
+          "type": "boolean",
+          "description": "鼠标滚轮滚动动作是否成功触发 (true/false)"
+        }
+      ]
     }
   ]
 }

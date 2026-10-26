@@ -5,59 +5,67 @@
   "actions": {
     "CellsClick": {
       "display_name": "セルクリック (CellsClick)",
-      "description": "在指定的网格或单元格坐标区域自动执行鼠标点击"
+      "description": "指定されたグリッドまたはセル領域でマウスをクリックします"
     },
     "Click": {
       "display_name": "マウスクリック (Click)",
-      "description": "在当前鼠标所在位置或屏幕指定坐标上单击或双击鼠标"
+      "description": "現在のマウス位置または指定された座標でクリックまたはダブルクリックを実行します"
+    },
+    "ClickAt": {
+      "display_name": "指定座標クリック (ClickAt)",
+      "description": "マウスカーソルを指定された画面絶対座標に移動し、クリックを実行します（即時またはスムーズ移動）"
+    },
+    "ClickWindowRelative": {
+      "display_name": "ウィンドウ相対クリック (ClickWindowRelative)",
+      "description": "対象ウィンドウまたはクライアント領域の相対座標でクリックを実行し、ウィンドウ移動やDPIスケーリングの影響を受けません"
+    },
+    "ConnectKmbox": {
+      "display_name": "ハードウェアボックス接続 (ConnectKmbox)",
+      "description": "KMBox (B+シリアル/Net UDP) または Makcu (ESP32-S3シリアル) ハードウェアボックスを接続し、アンチチートをバイパスして入力を自動ルーティング"
     },
     "DragPointer": {
       "display_name": "ドラッグ移動 (DragPointer)",
-      "description": "按住鼠标从当前位置平滑拖拽移动到目标位置，常用于滑块滑动或拖动文件"
+      "description": "マウスボタンを押したまま現在位置から目標オフセットまでスムーズにドラッグ移動します"
     },
-    "ListenMouse": {
-      "display_name": "マウス監視 (ListenMouse)",
-      "description": "在后台监听鼠标的点击或移动事件，并在触发时执行相应操作"
+    "GetKeyState": {
+      "display_name": "キー状態取得 (GetKeyState)",
+      "description": "キーのトグルロック状態（CapsLock/NumLock）または物理的な押下状態（Ctrl/Shift等）を取得します"
     },
-    "MoveOffset": {
-      "display_name": "相対移動 (MoveOffset)",
-      "description": "让鼠标光标相对于当前位置向上、下、左、右移动指定距离"
-    },
-    "MovePointer": {
-      "display_name": "マウスカーソル移動 (MovePointer)",
-      "description": "将鼠标光标移动到屏幕上的指定像素位置"
-    },
-    "WheelMouse": {
-      "display_name": "マウスホイール (WheelMouse)",
-      "description": "模拟鼠标滚轮向上或向下滚动指定步数，常用于网页或文档翻页"
+    "HoldKey": {
+      "display_name": "複合キー制御 (HoldKey)",
+      "description": "統合されたキー状態制御。キー保持 (Hold)、押し続け (Down)、または解放 (Up) をサポート"
     },
     "ListenKeyboard": {
       "display_name": "キー監視 (ListenKeyboard)",
-      "description": "在后台监听键盘按键，或设置全局快捷键触发流程"
+      "description": "バックグラウンドでキーボード入力を監視、またはグローバルショートカットを設定します"
     },
-    "PressAndReleaseKey": {
-      "display_name": "キー打鍵 (PressAndReleaseKey)",
-      "description": "按下某个按键并在保持指定时间后松开"
+    "ListenMouse": {
+      "display_name": "マウス監視 (ListenMouse)",
+      "description": "バックグラウンドでマウスイベントを監視し、必要に応じてイベントをブロックします"
     },
-    "PressKey": {
-      "display_name": "キー押下 (PressKey)",
-      "description": "按下指定按键并持续保持按住状态（不自动松开）"
+    "MovePointer": {
+      "display_name": "マウスカーソル移動 (MovePointer)",
+      "description": "マウスカーソルを指定の画面絶対座標に移動するか、現在位置から相対移動します"
     },
-    "ReleaseKey": {
-      "display_name": "キー解放 (ReleaseKey)",
-      "description": "松开之前处于按住状态的键盘按键"
+    "PointerPosition": {
+      "display_name": "カーソル位置取得/設定 (PointerPosition)",
+      "description": "現在のマウスカーソル座標を取得するか、指定座標へ即時テレポートします"
     },
     "SendKey": {
       "display_name": "キー送信 (SendKey)",
-      "description": "向当前活动窗口发送一组快捷键组合（如 Ctrl+C、Enter 等）"
+      "description": "アクティブウィンドウにショートカットキーの組み合わせを送信します"
     },
     "SendText": {
       "display_name": "テキスト入力 (SendText)",
-      "description": "向当前的输入框模拟敲击键盘输入一段文本内容"
+      "description": "現在の入力欄に文字列を模擬入力します"
     },
     "WaitKey": {
       "display_name": "キー待機 (WaitKey)",
-      "description": "暂停流程，直到用户按下了键盘上的某个指定按键后再继续"
+      "description": "指定キーが押されるかタイムアウトするまでプロセスを一時停止します"
+    },
+    "WheelMouse": {
+      "display_name": "マウスホイール (WheelMouse)",
+      "description": "マウスホイールを指定ステップ分上下にスクロールします"
     }
   }
 }

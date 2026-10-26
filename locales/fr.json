@@ -5,59 +5,67 @@
   "actions": {
     "CellsClick": {
       "display_name": "Clic de cellule (CellsClick)",
-      "description": "在指定的网格或单元格坐标区域自动执行鼠标点击"
+      "description": "Exécuter automatiquement des clics de souris dans la zone de grille ou de cellule spécifiée"
     },
     "Click": {
       "display_name": "Clic de souris (Click)",
-      "description": "在当前鼠标所在位置或屏幕指定坐标上单击或双击鼠标"
+      "description": "Cliquer ou double-cliquer à la position actuelle du curseur ou aux coordonnées spécifiées"
+    },
+    "ClickAt": {
+      "display_name": "Clic aux coordonnées (ClickAt)",
+      "description": "Déplacer le pointeur vers des coordonnées absolues et cliquer (instantané ou mouvement fluide)"
+    },
+    "ClickWindowRelative": {
+      "display_name": "Clic relatif à la fenêtre (ClickWindowRelative)",
+      "description": "Cliquer par rapport à la fenêtre cible ou à sa zone cliente, insensible aux déplacements de fenêtre et à la mise à l'échelle DPI"
+    },
+    "ConnectKmbox": {
+      "display_name": "Connecter le boîtier matériel (ConnectKmbox)",
+      "description": "Connecter le boîtier matériel KMBox (B+ Série / Net UDP) ou Makcu (ESP32-S3 Série) pour contourner l'anti-triche et router les actions clavier/souris"
     },
     "DragPointer": {
-      "display_name": "Glisser-déposer (DragPointer)",
-      "description": "按住鼠标从当前位置平滑拖拽移动到目标位置，常用于滑块滑动或拖动文件"
+      "display_name": "Glisser le pointeur (DragPointer)",
+      "description": "Maintenir le bouton enfoncé et glisser de manière fluide vers le décalage cible"
     },
-    "ListenMouse": {
-      "display_name": "Surveiller la souris (ListenMouse)",
-      "description": "在后台监听鼠标的点击或移动事件，并在触发时执行相应操作"
+    "GetKeyState": {
+      "display_name": "Obtenir l'état de la touche (GetKeyState)",
+      "description": "Vérifier l'état de verrouillage (CapsLock/NumLock) ou la pression physique (Ctrl/Shift, etc.)"
     },
-    "MoveOffset": {
-      "display_name": "Déplacement relatif (MoveOffset)",
-      "description": "让鼠标光标相对于当前位置向上、下、左、右移动指定距离"
-    },
-    "MovePointer": {
-      "display_name": "Déplacer pointeur (MovePointer)",
-      "description": "将鼠标光标移动到屏幕上的指定像素位置"
-    },
-    "WheelMouse": {
-      "display_name": "Molette de souris (WheelMouse)",
-      "description": "模拟鼠标滚轮向上或向下滚动指定步数，常用于网页或文档翻页"
+    "HoldKey": {
+      "display_name": "Contrôle composite des touches (HoldKey)",
+      "description": "Contrôle unifié de l'état des touches : frappe maintenue (Hold), maintien enfoncé (Down) ou relâchement (Up)"
     },
     "ListenKeyboard": {
       "display_name": "Surveiller le clavier (ListenKeyboard)",
-      "description": "在后台监听键盘按键，或设置全局快捷键触发流程"
+      "description": "Surveiller les touches en arrière-plan ou enregistrer des raccourcis globaux"
     },
-    "PressAndReleaseKey": {
-      "display_name": "Frapper touche (PressAndReleaseKey)",
-      "description": "按下某个按键并在保持指定时间后松开"
+    "ListenMouse": {
+      "display_name": "Surveiller la souris (ListenMouse)",
+      "description": "Surveiller les événements de souris en arrière-plan avec blocage d'événement optionnel"
     },
-    "PressKey": {
-      "display_name": "Enfoncer touche (PressKey)",
-      "description": "按下指定按键并持续保持按住状态（不自动松开）"
+    "MovePointer": {
+      "display_name": "Déplacer pointeur (MovePointer)",
+      "description": "Déplacer le pointeur vers des coordonnées absolues ou de manière relative à la position actuelle"
     },
-    "ReleaseKey": {
-      "display_name": "Relâcher touche (ReleaseKey)",
-      "description": "松开之前处于按住状态的键盘按键"
+    "PointerPosition": {
+      "display_name": "Obtenir/définir la position (PointerPosition)",
+      "description": "Obtenir les coordonnées actuelles du curseur ou téléporter le curseur aux coordonnées spécifiées"
     },
     "SendKey": {
       "display_name": "Envoyer touche (SendKey)",
-      "description": "向当前活动窗口发送一组快捷键组合（如 Ctrl+C、Enter 等）"
+      "description": "Envoyer une combinaison de touches de raccourci à la fenêtre active actuelle"
     },
     "SendText": {
       "display_name": "Saisir du texte (SendText)",
-      "description": "向当前的输入框模拟敲击键盘输入一段文本内容"
+      "description": "Simuler la saisie d'une chaîne de texte dans le champ de saisie actuel"
     },
     "WaitKey": {
       "display_name": "Attendre une touche (WaitKey)",
-      "description": "暂停流程，直到用户按下了键盘上的某个指定按键后再继续"
+      "description": "Suspendre le workflow jusqu'à ce que l'utilisateur appuie sur une touche ou que le délai expire"
+    },
+    "WheelMouse": {
+      "display_name": "Molette de souris (WheelMouse)",
+      "description": "Faire défiler la molette vers le haut ou vers le bas selon le nombre de pas spécifié"
     }
   }
 }

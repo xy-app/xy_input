@@ -5,59 +5,67 @@
   "actions": {
     "CellsClick": {
       "display_name": "Zellenklick (CellsClick)",
-      "description": "在指定的网格或单元格坐标区域自动执行鼠标点击"
+      "description": "Mausklicks im angegebenen Raster- oder Zellenbereich automatisch ausführen"
     },
     "Click": {
       "display_name": "Mausklick (Click)",
-      "description": "在当前鼠标所在位置或屏幕指定坐标上单击或双击鼠标"
+      "description": "Maus an der aktuellen Position oder an den angegebenen Bildschirmkoordinaten einfach oder doppelt klicken"
+    },
+    "ClickAt": {
+      "display_name": "Punktklick (ClickAt)",
+      "description": "Mauszeiger zu absoluten Bildschirmkoordinaten bewegen und Klick ausführen (sofort oder mit glatter Bewegung)"
+    },
+    "ClickWindowRelative": {
+      "display_name": "Fensterrelativer Klick (ClickWindowRelative)",
+      "description": "Klick relativ zum Zielfenster oder Client-Bereich ausführen, immun gegen Fensterbewegungen und DPI-Skalierung"
+    },
+    "ConnectKmbox": {
+      "display_name": "Hardware-Box verbinden (ConnectKmbox)",
+      "description": "KMBox (B+ Seriell / Net UDP) oder Makcu (ESP32-S3 Seriell) Hardware-Box verbinden, um Anti-Cheat zu umgehen und Maus-/Tastaturaktionen weiterzuleiten"
     },
     "DragPointer": {
       "display_name": "Zeiger ziehen (DragPointer)",
-      "description": "按住鼠标从当前位置平滑拖拽移动到目标位置，常用于滑块滑动或拖动文件"
+      "description": "Maustaste gedrückt halten und flüssig von der aktuellen Position zum Zieloffset ziehen"
     },
-    "ListenMouse": {
-      "display_name": "Maus überwachen (ListenMouse)",
-      "description": "在后台监听鼠标的点击或移动事件，并在触发时执行相应操作"
+    "GetKeyState": {
+      "display_name": "Tastenstatus abrufen (GetKeyState)",
+      "description": "Umschaltstatus (CapsLock/NumLock) oder physischen Druckstatus (Ctrl/Shift usw.) prüfen"
     },
-    "MoveOffset": {
-      "display_name": "Relativ bewegen (MoveOffset)",
-      "description": "让鼠标光标相对于当前位置向上、下、左、右移动指定距离"
-    },
-    "MovePointer": {
-      "display_name": "Zeiger bewegen (MovePointer)",
-      "description": "将鼠标光标移动到屏幕上的指定像素位置"
-    },
-    "WheelMouse": {
-      "display_name": "Mausrad (WheelMouse)",
-      "description": "模拟鼠标滚轮向上或向下滚动指定步数，常用于网页或文档翻页"
+    "HoldKey": {
+      "display_name": "Kombinierte Tastensteuerung (HoldKey)",
+      "description": "Einheitliche Tastensteuerung für Halten (Hold), Gedrückthalten (Down) oder Loslassen (Up)"
     },
     "ListenKeyboard": {
       "display_name": "Tastatur überwachen (ListenKeyboard)",
-      "description": "在后台监听键盘按键，或设置全局快捷键触发流程"
+      "description": "Tastaturereignisse im Hintergrund überwachen oder globale Tastenkombinationen registrieren"
     },
-    "PressAndReleaseKey": {
-      "display_name": "Taste tippen (PressAndReleaseKey)",
-      "description": "按下某个按键并在保持指定时间后松开"
+    "ListenMouse": {
+      "display_name": "Maus überwachen (ListenMouse)",
+      "description": "Mausklick- oder Bewegungsereignisse im Hintergrund überwachen mit optionaler Ereignisblockierung"
     },
-    "PressKey": {
-      "display_name": "Taste drücken (PressKey)",
-      "description": "按下指定按键并持续保持按住状态（不自动松开）"
+    "MovePointer": {
+      "display_name": "Zeiger bewegen (MovePointer)",
+      "description": "Mauszeiger zu absoluten Bildschirmkoordinaten oder relativ zur aktuellen Position bewegen"
     },
-    "ReleaseKey": {
-      "display_name": "Taste loslassen (ReleaseKey)",
-      "description": "松开之前处于按住状态的键盘按键"
+    "PointerPosition": {
+      "display_name": "Zeigerposition abrufen/setzen (PointerPosition)",
+      "description": "Aktuelle Bildschirmkoordinaten abrufen oder Zeiger sofort zu den angegebenen Koordinaten teleportieren"
     },
     "SendKey": {
       "display_name": "Taste senden (SendKey)",
-      "description": "向当前活动窗口发送一组快捷键组合（如 Ctrl+C、Enter 等）"
+      "description": "Tastenkombination an das aktuelle aktive Fenster senden"
     },
     "SendText": {
       "display_name": "Text eingeben (SendText)",
-      "description": "向当前的输入框模拟敲击键盘输入一段文本内容"
+      "description": "Textzeichenfolge in das aktuelle Eingabefeld simulieren"
     },
     "WaitKey": {
       "display_name": "Auf Taste warten (WaitKey)",
-      "description": "暂停流程，直到用户按下了键盘上的某个指定按键后再继续"
+      "description": "Workflow anhalten, bis eine bestimmte Taste gedrückt wird oder Zeitüberschreitung auftritt"
+    },
+    "WheelMouse": {
+      "display_name": "Mausrad (WheelMouse)",
+      "description": "Mausrad um eine bestimmte Anzahl von Schritten nach oben oder unten drehen"
     }
   }
 }
